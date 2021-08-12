@@ -1,0 +1,28 @@
+name: Book CI/CD
+
+# 在 book 分支得到推送时候触发这个 Actions
+on:
+  push:
+    branches:
+      - book
+
+jobs:
+
+  book-cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v2
+
+      - name: Prepare Env #配置 mdbook 环境
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+
+      - run: mdbook build
+
+      - name: Deploy Book
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./book
